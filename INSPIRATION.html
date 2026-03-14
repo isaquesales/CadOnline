@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="macchiato">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editor.js - Notebook Layout</title>
+  <style>
+    *{box-sizing:border-box}
+    :root{
+      --topbar-height:64px;--sidebar-width:250px;
+      --paper-line-step:36px;--paper-line-thickness:2px;--paper-top-offset:18px;
+      --content-left-padding:104px;--content-right-padding:28px;--content-top-padding:18px;--content-bottom-padding:28px;
+      --margin-line-x:78px;
+      --font-size-body:19px;--line-height-body:36px;
+      --font-size-h1:38px;--font-size-h2:30px;--font-size-h3:24px;--line-height-heading:36px;
+    }
+
+    html[data-theme="macchiato"]{
+      --bg:#f2f0ea;--topbar:#e8e3da;--sidebar:#ebe6de;--paper:#f6f3ec;
+      --text:#3f4358;--subtext:#5b6078;--muted:#7a8099;
+      --blue-line:rgba(93,153,255,.52);--margin-line:rgba(230,82,110,.34);
+      --hover:#ddd8d1;--active:#d4cfc8;
+      --toolbar-bg:#e5e0d9;--toolbar-hover:#d8d2cb;--input-bg:#eeebe5;
+      --selection:rgba(93,153,255,.10);--accent:#5d99ff;--accent-contrast:#fff;
+    }
+
+    html[data-theme="mocha"]{
+      --bg:#181825;--topbar:#11111b;--sidebar:#1e1e2e;--paper:#1a1b26;
+      --text:#d9e2ff;--subtext:#b8c2ea;--muted:#95a0cc;
+      --blue-line:rgba(109,169,255,.58);--margin-line:rgba(255,120,150,.30);
+      --hover:#2a2d42;--active:#343850;
+      --toolbar-bg:#313244;--toolbar-hover:#45475a;--input-bg:#181825;
+      --selection:rgba(109,169,255,.10);--accent:#6da9ff;--accent-contrast:#0b1020;
+    }
+
+    html,body{
+      margin:0;padding:0;height:100%;
+      background:var(--bg);color:var(--text);
+      font-family:Arial,sans-serif;
+    }
+
+    body{overflow:hidden}
+
+    .topbar,.sidebar,.main,.paper,.editor-shell{position:relative}
+    .topbar{
+      position:fixed;top:0;left:0;right:0;height:var(--topbar-height);
+      z-index:1000;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 18px;background:var(--topbar);
+    }
+
+    .topbar-left{min-width:0}
+    .topbar-title{margin:0;font-size:20px;font-weight:700;color:var(--text)}
+    .topbar-subtitle{margin:4px 0 0;font-size:13px;color:var(--subtext)}
+
+    .topbar-right{
+      display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+    }
+
+    .sidebar{
+      position:fixed;top:var(--topbar-height);left:0;bottom:0;
+      width:var(--sidebar-width);
+      overflow:auto;
+      padding:14px;background:var(--sidebar);
+    }
+
+    .brand{
+      display:flex;align-items:center;gap:12px;
+      padding:8px 10px 16px;
+    }
+
+    .brand-mark{
+      width:34px;height:34px;flex:0 0 auto;
+      border-radius:10px;background:var(--accent);
+    }
+
+    .brand-title{margin:0;font-size:16px;font-weight:700;color:var(--text)}
+    .brand-subtitle{margin:3px 0 0;font-size:12px;color:var(--muted)}
+
+    .nav-group{margin-top:12px}
+    .nav-label{
+      padding:8px 10px;
+      font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .nav-item{
+      display:block;width:100%;
+      padding:12px;
+      border:0;border-radius:12px;
+      background:transparent;color:var(--text);
+      text-align:left;cursor:pointer;
+      font-size:14px;font-weight:600;
+    }
+
+    .nav-item:hover{background:var(--hover)}
+    .nav-item.active{background:var(--active)}
+
+    .theme-btn{
+      padding:10px 14px;
+      border:0;border-radius:10px;
+      background:var(--accent);color:var(--accent-contrast);
+      font-size:14px;font-weight:700;cursor:pointer;
+    }
+
+    .theme-btn.ghost{background:var(--hover);color:var(--text)}
+
+    .main{
+      position:fixed;
+      top:var(--topbar-height);left:var(--sidebar-width);right:0;bottom:0;
+      overflow:auto;background:var(--bg);
+    }
+
+    .main-inner{
+      max-width:1100px;min-height:100%;
+      margin:0 auto;
+    }
+
+    .paper{
+      min-height:100%;
+      overflow:hidden;
+      background:var(--paper);
+    }
+
+    .paper::before{
+      content:"";
+      position:absolute;inset:0;
+      pointer-events:none;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent calc(var(--paper-line-step) - var(--paper-line-thickness)),
+          var(--blue-line) calc(var(--paper-line-step) - var(--paper-line-thickness)),
+          var(--blue-line) var(--paper-line-step)
+        ),
+        linear-gradient(
+          to right,
+          transparent 0,
+          transparent var(--margin-line-x),
+          var(--margin-line) var(--margin-line-x),
+          var(--margin-line) calc(var(--margin-line-x) + 2px),
+          transparent calc(var(--margin-line-x) + 2px)
+        );
+      background-position:0 var(--paper-top-offset),0 0;
+    }
+
+    .editor-shell{
+      z-index:1;
+      padding:var(--content-top-padding) var(--content-right-padding) var(--content-bottom-padding) var(--content-left-padding);
+    }
+
+    #editorjs{min-height:calc(100vh - var(--topbar-height) - 40px)}
+    .codex-editor__redactor{padding-bottom:0!important}
+    .ce-block,.ce-block__content{margin:0!important}
+    .ce-block__content,.ce-toolbar__content{max-width:100%}
+    .ce-block__content>*{margin-top:0!important;margin-bottom:0!important}
+
+    .ce-paragraph,
+    .cdx-list,
+    .cdx-list__item,
+    .ce-header{
+      margin:0!important;
+      color:var(--text)!important;
+      font-family:Arial,sans-serif!important;
+      row-gap:0!important;column-gap:0!important;gap:0!important;
+    }
+
+    .ce-paragraph{
+      min-height:var(--line-height-body);
+      padding:0!important;
+      font-size:var(--font-size-body)!important;
+      line-height:var(--line-height-body)!important;
+    }
+
+    .cdx-list{
+      margin:0!important;
+      padding:0 0 0 28px!important;
+      font-size:var(--font-size-body)!important;
+      line-height:var(--line-height-body)!important;
+    }
+
+    .cdx-list__item{
+      margin:0!important;padding:0!important;
+      font-size:var(--font-size-body)!important;
+      line-height:var(--line-height-body)!important;
+    }
+
+    .ce-header{
+      min-height:var(--line-height-heading);
+      padding:0!important;
+      font-weight:700!important;
+      line-height:var(--line-height-heading)!important;
+    }
+
+    h1.ce-header{
+      min-height:calc(var(--line-height-heading) * 2);
+      font-size:var(--font-size-h1)!important;
+      line-height:calc(var(--line-height-heading) * 2)!important;
+    }
+
+    h2.ce-header{font-size:var(--font-size-h2)!important}
+    h3.ce-header{font-size:var(--font-size-h3)!important}
+
+    .ce-toolbar__plus,
+    .ce-toolbar__settings-btn,
+    .ce-inline-toolbar,
+    .ce-conversion-toolbar,
+    .ce-popover,
+    .tc-popover,
+    .cdx-search-field{
+      border:0!important;
+      box-shadow:none!important;
+      background:var(--toolbar-bg)!important;
+      color:var(--text)!important;
+    }
+
+    .ce-toolbar__plus:hover,
+    .ce-toolbar__settings-btn:hover,
+    .ce-popover-item:hover,
+    .ce-conversion-toolbar__label:hover{
+      background:var(--toolbar-hover)!important;
+    }
+
+    .cdx-input{
+      border:0!important;
+      box-shadow:none!important;
+      background:var(--input-bg)!important;
+      color:var(--text)!important;
+    }
+
+    .ce-block--selected .ce-block__content{background:var(--selection)!important}
+    .ce-delimiter{color:var(--muted)!important}
+
+    @media (max-width:900px){
+      :root{
+        --sidebar-width:210px;
+        --content-left-padding:88px;
+        --margin-line-x:62px;
+      }
+    }
+
+    @media (max-width:720px){
+      :root{
+        --topbar-height:60px;--sidebar-width:84px;
+        --content-left-padding:66px;--content-right-padding:16px;
+        --margin-line-x:44px;--font-size-body:18px;
+      }
+
+      .brand-copy,.nav-label,.nav-item span,.topbar-subtitle{display:none}
+      .brand{justify-content:center}
+      .nav-item{text-align:center;padding:12px 8px}
+      .topbar{padding:0 12px}
+      .topbar-title{font-size:18px}
+      .topbar-right{gap:6px}
+      .theme-btn{padding:9px 10px;font-size:13px}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1 class="topbar-title">CadOnline</h1>
+      <p class="topbar-subtitle">Host Institucional (local)</p>
+    </div>
+    <div class="topbar-right">
+      <button class="theme-btn ghost" id="macchiatoBtn" type="button">Macchiato</button>
+      <button class="theme-btn ghost" id="mochaBtn" type="button">Mocha</button>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div class="brand-copy">
+        <p class="brand-title">Caderno</p>
+        <p class="brand-subtitle">Adicione suas informações</p>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Principal</div>
+      <button class="nav-item active" type="button"><span>Lembretes</span></button>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Conteúdo</div>
+      <button class="nav-item" type="button"><span>Recentes</span></button>
+      <button class="nav-item" type="button"><span>Favoritos</span></button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+      <section class="paper">
+        <div class="editor-shell">
+          <div id="editorjs"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const setTheme = theme => root.setAttribute("data-theme", theme);
+
+      document.getElementById("macchiatoBtn")?.addEventListener("click", () => setTheme("macchiato"));
+      document.getElementById("mochaBtn")?.addEventListener("click", () => setTheme("mocha"));
+
+      const ListTool = window.EditorjsList || window.List;
+      const HeaderTool = window.Header;
+
+      if (!window.EditorJS || !HeaderTool || !ListTool) {
+        console.error("Editor.js ou ferramentas não foram carregados corretamente.");
+        return;
+      }
+
+      new EditorJS({
+        holder: "editorjs",
+        placeholder: "Digite seu conteúdo aqui...",
+        tools: {
+          header: {
+            class: HeaderTool,
+            inlineToolbar: true,
+            config: { placeholder: "Título" }
+          },
+          list: {
+            class: ListTool,
+            inlineToolbar: true
+          }
+        },
+        data: {
+          blocks: [
+            {
+              type: "header",
+              data: { text: "Lib Editor.js", level: 2 }
+            },
+            {
+              type: "paragraph",
+              data: { text: "É só um template. falta backend, banco, auth opcional, sincronização, muita coisa" }
+            },
+            {
+              type: "paragraph",
+              data: { text: "Pouco tempo pra fazer isso agora, vou deixar pra depois." }
+            },
+            {
+              type: "paragraph",
+              data: { text: "" }
+            },
+            {
+              type: "header",
+              data: { text: "coisas que tem suportadas pelo Editor.js", level: 2 }
+            },
+            {
+              type: "list",
+              data: {
+                style: "unordered",
+                items: ["Listas", "Paragrafos", "Titulos", "Check-lists", "Etc"]
+              }
+            }
+          ]
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,5 +1,42 @@
 # CadOnline
 
+## Website minimo em Ruby on Rails
+
+Foi adicionada uma base Rails minima na raiz do repositorio com:
+
+* rota inicial em `/`
+* controller `PagesController`
+* view e layout responsivos
+* SQLite configurado
+* teste basico para a home
+* menos arquivos-placeholder no repositorio
+
+### Como rodar a versao Rails
+
+Requisitos:
+
+* Ruby 3.2 ou superior
+* Bundler
+* SQLite3
+
+Comandos:
+
+```bash
+make setup
+make run
+```
+
+Abra `http://127.0.0.1:3000` no navegador.
+O endpoint `http://127.0.0.1:3000/up` retorna o health check padrao do Rails.
+As gems ficam isoladas em `vendor/bundle`.
+
+## Prototipo Lucky local
+
+Observacao: a implementacao executavel presente na raiz deste checkout e a versao Rails descrita acima.
+As notas abaixo sao historicas e descrevem um prototipo anterior mencionado na documentacao.
+
+Este repositorio agora tambem inclui um esboco em **Crystal + Lucky** na pasta `cad_online_lucky`, com **SQLite local** para facilitar execucao sem PostgreSQL.
+
 **CadOnline** é uma plataforma digital voltada para instituições de ensino que busca **reduzir e substituir parcialmente o uso de papel no cotidiano escolar**.
 
 A plataforma centraliza avisos, atividades, organização pessoal e colaboração entre alunos e professores em um ambiente digital simples e acessível.
@@ -134,3 +171,58 @@ Utilizada para:
 # Especificações Técnicas
 
 Implementação com ASP.NET no padrão MVC (dotnet core 10), Entity Framework (SQLite 3) e NLua para Scripting e analise de dados.
+
+# Implementação Atual
+
+A implementação real do website está no projeto:
+
+`CadOnline.Web` (ASP.NET Core MVC, .NET 10, EF Core + SQLite)
+
+### Funcionalidades implementadas
+
+* shell completo com **topbar + sidebar + conteúdo principal**
+* rotas para:
+  * painel
+  * administração global
+  * administração institucional
+  * professor
+  * sala de aula
+  * grupos
+  * pessoal
+  * análise
+* autenticação com:
+  * login por usuário e senha
+  * logout
+  * criação de conta (instituição, turma, curso, turno)
+  * perfis salvos em cookie do navegador
+* persistência em SQLite com dados de exemplo:
+  * instituições
+  * turmas
+  * usuários
+  * avisos
+  * atividades e entregas
+  * lembretes e ideias
+  * grupos e threads
+  * scripts da área de análise
+* integração com **NLua** no backend para execução de script Lua na área de Análise
+
+### Como executar
+
+```bash
+cd CadOnline.Web
+dotnet run
+```
+
+Abra no navegador o endereço mostrado no terminal.
+
+### Logins de teste
+
+Todos os usuários seedados usam senha: `1234`
+
+Exemplos:
+
+* `superadmin` (Admin Global)
+* `coordenadora` (Admin Institucional)
+* `prof.celia` (Professor)
+* `maria` (Aluno)
+

@@ -4,7 +4,7 @@ sistema com login com apenas nome de usuário + senha?
 
 ao apertar login aparece um prompt com a lista de:
     - usuários salvos no cookie do navegador, formatado em:
-        - Meu Nome da Silva / Escola123
+        - Meu Nome da Silva / Escola123, Meu Nome da Silva / Individual, etc
     - opção de adicionar, na qual:
         - pede nome
         - pede senha
