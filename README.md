@@ -174,9 +174,7 @@ Implementação com ASP.NET no padrão MVC (dotnet core 10), Entity Framework (S
 
 # Implementação Atual
 
-A implementação real do website está no projeto:
-
-`CadOnline.Web` (ASP.NET Core MVC, .NET 10, EF Core + SQLite)
+A implementação real do website está no projeto `cadonline`, feito utilizando a framework Ruby on Rails.
 
 ### Funcionalidades implementadas
 
