@@ -264,8 +264,9 @@
       <p class="topbar-subtitle">Institucional (local)</p>
     </div>
     <div class="topbar-right">
-      <button class="theme-btn ghost" id="macchiatoBtn" type="button">Macchiato</button>
-      <button class="theme-btn ghost" id="mochaBtn" type="button">Mocha</button>
+      <button class="theme-btn ghost" id="themeToggleBtn" type="button" aria-label="Alternar tema">
+        Macchiato
+      </button>
     </div>
   </header>
 
@@ -306,11 +307,22 @@
   <script>
     (() => {
       const root = document.documentElement;
-      const setTheme = theme => root.setAttribute("data-theme", theme);
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
 
-      document.getElementById("macchiatoBtn")?.addEventListener("click", () => setTheme("macchiato"));
-      document.getElementById("mochaBtn")?.addEventListener("click", () => setTheme("mocha"));
+      const setTheme = theme => {
+        root.setAttribute("data-theme", theme);
+        if (themeToggleBtn) {
+          themeToggleBtn.textContent = theme === "macchiato" ? "Macchiato" : "Mocha";
+        }
+      };
 
+      themeToggleBtn?.addEventListener("click", () => {
+        const currentTheme = root.getAttribute("data-theme");
+        const nextTheme = currentTheme === "macchiato" ? "mocha" : "macchiato";
+        setTheme(nextTheme);
+      });
+
+      setTheme(root.getAttribute("data-theme") || "macchiato");
       const ListTool = window.EditorjsList || window.List;
       const HeaderTool = window.Header;
 
