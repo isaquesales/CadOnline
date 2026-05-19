@@ -1,259 +1,315 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="macchiato">
+<html lang="pt-BR" data-theme="claro">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Editor.js - Notebook Layout</title>
+  <title>CadOnline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <style>
-    *{box-sizing:border-box}
-    :root{
-      --topbar-height:64px;--sidebar-width:250px;
-      --paper-line-step:36px;--paper-line-thickness:2px;--paper-top-offset:18px;
-      --content-left-padding:104px;--content-right-padding:28px;--content-top-padding:18px;--content-bottom-padding:28px;
-      --margin-line-x:78px;
-      --font-size-body:19px;--line-height-body:36px;
-      --font-size-h1:38px;--font-size-h2:30px;--font-size-h3:24px;--line-height-heading:36px;
+    * { box-sizing: border-box }
+
+    /*
+     * ── GRADE VERTICAL ───────────────────────────────────────────
+     *
+     * Toda a tipografia do editor obedece à mesma unidade: --step.
+     * As linhas do papel são desenhadas com esse step.
+     * Qualquer line-height deve ser múltiplo exato de --step.
+     *
+     *   Parágrafo  →  1 × --step  =  36px
+     *   H2, H3     →  1 × --step  =  36px  (tamanho muda, step não)
+     *   H1         →  2 × --step  =  72px
+     *
+     * --top-offset alinha a primeira linha do papel com a
+     * primeira linha de texto. Deve ser igual a --pad-top.
+     * --pad-left deve sempre ser maior que --margin-x.
+     *
+     * ─────────────────────────────────────────────────────────── */
+    :root {
+      --step: 36px;
+
+      --topbar-height: 52px;
+      --sidebar-width: 236px;
+
+      --line-thickness: 1.5px;
+      --top-offset: 18px;   /* = --pad-top: alinha grade com texto */
+      --margin-x: 74px;     /* < --pad-left */
+
+      --pad-left: 98px;
+      --pad-right: 36px;
+      --pad-top: 18px;      /* = --top-offset */
+
+      --font-ui: system-ui, -apple-system, sans-serif;
+      --font-content: 'EB Garamond', Georgia, serif;
+
+      --size-body: 20px;    /* linha-height = 1 × --step */
+      --size-h1:   36px;    /* linha-height = 2 × --step */
+      --size-h2:   26px;    /* linha-height = 1 × --step */
+      --size-h3:   21px;    /* linha-height = 1 × --step */
     }
 
-    html[data-theme="macchiato"]{
-      --bg:#f2f0ea;--topbar:#e8e3da;--sidebar:#ebe6de;--paper:#f6f3ec;
-      --text:#3f4358;--subtext:#5b6078;--muted:#7a8099;
-      --blue-line:rgba(93,153,255,.52);--margin-line:rgba(230,82,110,.34);
-      --hover:#ddd8d1;--active:#d4cfc8;
-      --toolbar-bg:#e5e0d9;--toolbar-hover:#d8d2cb;--input-bg:#eeebe5;
-      --selection:rgba(93,153,255,.10);--accent:#5d99ff;--accent-contrast:#fff;
+    html[data-theme="claro"] {
+      --bg:        #e6e1d9;
+      --topbar:    #ddd8d0;
+      --sidebar:   #e1dcd4;
+      --paper:     #f0ebe2;
+      --text:      #201c13;
+      --subtext:   #574f43;
+      --muted:     #8a7e6e;
+      --line-blue: rgba(55, 100, 168, .30);
+      --line-red:  rgba(158, 40, 40, .22);
+      --divide:    rgba(0, 0, 0, .08);
+      --hover:     #d4cfc8;
+      --active:    #cac5be;
+      --tool-bg:   #d9d4cc;
+      --tool-hover:#cec9c2;
+      --input-bg:  #e6e1d9;
+      --selection: rgba(55, 100, 168, .08);
+      --accent:    #3a6aad;
+      --accent-fg: #fff;
     }
 
-    html[data-theme="mocha"]{
-      --bg:#181825;--topbar:#11111b;--sidebar:#1e1e2e;--paper:#1a1b26;
-      --text:#d9e2ff;--subtext:#b8c2ea;--muted:#95a0cc;
-      --blue-line:rgba(109,169,255,.58);--margin-line:rgba(255,120,150,.30);
-      --hover:#2a2d42;--active:#343850;
-      --toolbar-bg:#313244;--toolbar-hover:#45475a;--input-bg:#181825;
-      --selection:rgba(109,169,255,.10);--accent:#6da9ff;--accent-contrast:#0b1020;
+    html[data-theme="escuro"] {
+      --bg:        #0d0c0a;
+      --topbar:    #0a0908;
+      --sidebar:   #111009;
+      --paper:     #121109;
+      --text:      #c8bba4;
+      --subtext:   #7d7264;
+      --muted:     #524940;
+      --line-blue: rgba(80, 120, 175, .15);
+      --line-red:  rgba(155, 65, 45, .14);
+      --divide:    rgba(255, 255, 255, .05);
+      --hover:     #1b1a16;
+      --active:    #21201b;
+      --tool-bg:   #18170f;
+      --tool-hover:#1e1d14;
+      --input-bg:  #0d0c0a;
+      --selection: rgba(80, 120, 175, .10);
+      --accent:    #7496bc;
+      --accent-fg: #0a0908;
     }
 
-    html,body{
-      margin:0;padding:0;height:100%;
-      background:var(--bg);color:var(--text);
-      font-family:Arial,sans-serif;
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      background: var(--bg); color: var(--text);
+      font-family: var(--font-ui);
+    }
+    body { overflow: hidden }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--topbar-height);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 18px;
+      background: var(--topbar);
+      border-bottom: 1px solid var(--divide);
     }
 
-    body{overflow:hidden}
+    .topbar-left { min-width: 0 }
+    .topbar-title {
+      margin: 0;
+      font-size: 15px; font-weight: 600; letter-spacing: .02em;
+      color: var(--text);
+    }
+    .topbar-subtitle {
+      margin: 2px 0 0;
+      font-size: 11px; color: var(--muted); letter-spacing: .01em;
+    }
+    .topbar-right { display: flex; align-items: center; gap: 8px }
 
-    .topbar,.sidebar,.main,.paper,.editor-shell{position:relative}
-    .topbar{
-      position:fixed;top:0;left:0;right:0;height:var(--topbar-height);
-      z-index:1000;
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0 18px;background:var(--topbar);
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed; top: var(--topbar-height); left: 0; bottom: 0;
+      width: var(--sidebar-width);
+      overflow: auto; padding: 16px 10px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--divide);
     }
 
-    .topbar-left{min-width:0}
-    .topbar-title{margin:0;font-size:20px;font-weight:700;color:var(--text)}
-    .topbar-subtitle{margin:4px 0 0;font-size:13px;color:var(--subtext)}
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      padding: 6px 10px 18px;
+    }
+    .brand-mark {
+      width: 26px; height: 26px; flex: 0 0 auto;
+      border-radius: 5px;
+      border: 1.5px solid var(--muted);
+      opacity: .45;
+    }
+    .brand-title  { margin: 0; font-size: 13px; font-weight: 600; color: var(--text) }
+    .brand-subtitle { margin: 2px 0 0; font-size: 11px; color: var(--muted) }
 
-    .topbar-right{
-      display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+    .nav-group { margin-top: 6px }
+    .nav-label {
+      padding: 4px 10px 3px;
+      font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .nav-item {
+      display: block; width: 100%;
+      padding: 8px 10px;
+      border: 0; border-radius: 7px;
+      background: transparent; color: var(--subtext);
+      text-align: left; cursor: pointer;
+      font-size: 13px; font-weight: 500;
+      font-family: var(--font-ui);
+      transition: background .1s, color .1s;
+    }
+    .nav-item:hover  { background: var(--hover);  color: var(--text) }
+    .nav-item.active { background: var(--active); color: var(--text); font-weight: 600 }
+
+    .theme-btn {
+      padding: 6px 12px;
+      border: 1px solid var(--divide);
+      border-radius: 6px;
+      background: transparent; color: var(--subtext);
+      font-size: 12px; font-weight: 500; cursor: pointer;
+      font-family: var(--font-ui);
+      transition: background .1s, color .1s;
+    }
+    .theme-btn:hover { background: var(--hover); color: var(--text) }
+
+    /* ── MAIN ── */
+    .main {
+      position: fixed;
+      top: var(--topbar-height); left: var(--sidebar-width); right: 0; bottom: 0;
+      overflow: auto; background: var(--bg);
+    }
+    .main-inner { max-width: 880px; min-height: 100%; margin: 0 auto }
+
+    /* ── PAPER ── */
+    .paper {
+      position: relative;
+      min-height: 100%;
+      overflow: hidden;
+      background: var(--paper);
     }
 
-    .sidebar{
-      position:fixed;top:var(--topbar-height);left:0;bottom:0;
-      width:var(--sidebar-width);
-      overflow:auto;
-      padding:14px;background:var(--sidebar);
-    }
-
-    .brand{
-      display:flex;align-items:center;gap:12px;
-      padding:8px 10px 16px;
-    }
-
-    .brand-mark{
-      width:34px;height:34px;flex:0 0 auto;
-      border-radius:10px;background:var(--accent);
-    }
-
-    .brand-title{margin:0;font-size:16px;font-weight:700;color:var(--text)}
-    .brand-subtitle{margin:3px 0 0;font-size:12px;color:var(--muted)}
-
-    .nav-group{margin-top:12px}
-    .nav-label{
-      padding:8px 10px;
-      font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-      color:var(--muted);
-    }
-
-    .nav-item{
-      display:block;width:100%;
-      padding:12px;
-      border:0;border-radius:12px;
-      background:transparent;color:var(--text);
-      text-align:left;cursor:pointer;
-      font-size:14px;font-weight:600;
-    }
-
-    .nav-item:hover{background:var(--hover)}
-    .nav-item.active{background:var(--active)}
-
-    .theme-btn{
-      padding:10px 14px;
-      border:0;border-radius:10px;
-      background:var(--accent);color:var(--accent-contrast);
-      font-size:14px;font-weight:700;cursor:pointer;
-    }
-
-    .theme-btn.ghost{background:var(--hover);color:var(--text)}
-
-    .main{
-      position:fixed;
-      top:var(--topbar-height);left:var(--sidebar-width);right:0;bottom:0;
-      overflow:auto;background:var(--bg);
-    }
-
-    .main-inner{
-      max-width:1100px;min-height:100%;
-      margin:0 auto;
-    }
-
-    .paper{
-      min-height:100%;
-      overflow:hidden;
-      background:var(--paper);
-    }
-
-    .paper::before{
-      content:"";
-      position:absolute;inset:0;
-      pointer-events:none;
+    /*
+     * Grade: linhas a cada --step com offset --top-offset.
+     * Margem vermelha vertical em --margin-x.
+     * Ambas usam a mesma variável de espessura --line-thickness.
+     */
+    .paper::before {
+      content: "";
+      position: absolute; inset: 0;
+      pointer-events: none;
       background:
         repeating-linear-gradient(
           to bottom,
           transparent 0,
-          transparent calc(var(--paper-line-step) - var(--paper-line-thickness)),
-          var(--blue-line) calc(var(--paper-line-step) - var(--paper-line-thickness)),
-          var(--blue-line) var(--paper-line-step)
+          transparent calc(var(--step) - var(--line-thickness)),
+          var(--line-blue) calc(var(--step) - var(--line-thickness)),
+          var(--line-blue) var(--step)
         ),
         linear-gradient(
           to right,
-          transparent 0,
-          transparent var(--margin-line-x),
-          var(--margin-line) var(--margin-line-x),
-          var(--margin-line) calc(var(--margin-line-x) + 2px),
-          transparent calc(var(--margin-line-x) + 2px)
+          transparent var(--margin-x),
+          var(--line-red) var(--margin-x),
+          var(--line-red) calc(var(--margin-x) + var(--line-thickness)),
+          transparent calc(var(--margin-x) + var(--line-thickness))
         );
-      background-position:0 var(--paper-top-offset),0 0;
+      background-position: 0 var(--top-offset), 0 0;
     }
 
-    .editor-shell{
-      z-index:1;
-      padding:var(--content-top-padding) var(--content-right-padding) var(--content-bottom-padding) var(--content-left-padding);
+    .editor-shell {
+      position: relative; z-index: 1;
+      padding: var(--pad-top) var(--pad-right) 48px var(--pad-left);
     }
 
-    #editorjs{min-height:calc(100vh - var(--topbar-height) - 40px)}
-    .codex-editor__redactor{padding-bottom:0!important}
-    .ce-block,.ce-block__content{margin:0!important}
-    .ce-block__content,.ce-toolbar__content{max-width:100%}
-    .ce-block__content>*{margin-top:0!important;margin-bottom:0!important}
+    /* ── EDITORJS RESET ── */
+    #editorjs { min-height: calc(100vh - var(--topbar-height) - 40px) }
+    .codex-editor__redactor { padding-bottom: 0 !important }
+    .ce-block, .ce-block__content { margin: 0 !important }
+    .ce-block__content, .ce-toolbar__content { max-width: 100% }
+    .ce-block__content > * { margin: 0 !important }
 
-    .ce-paragraph,
-    .cdx-list,
-    .cdx-list__item,
-    .ce-header{
-      margin:0!important;
-      color:var(--text)!important;
-      font-family:Arial,sans-serif!important;
-      row-gap:0!important;column-gap:0!important;gap:0!important;
+    /*
+     * GRADE: font-family e line-height controlados aqui.
+     * Não altere line-height sem ajustar --step.
+     */
+    .ce-paragraph, .cdx-list, .cdx-list__item, .ce-header {
+      margin: 0 !important;
+      color: var(--text) !important;
+      font-family: var(--font-content) !important;
+      gap: 0 !important;
     }
 
-    .ce-paragraph{
-      min-height:var(--line-height-body);
-      padding:0!important;
-      font-size:var(--font-size-body)!important;
-      line-height:var(--line-height-body)!important;
+    .ce-paragraph {
+      min-height: var(--step);           /* 1 × --step */
+      padding: 0 !important;
+      font-size: var(--size-body) !important;
+      line-height: var(--step) !important;
     }
 
-    .cdx-list{
-      margin:0!important;
-      padding:0 0 0 28px!important;
-      font-size:var(--font-size-body)!important;
-      line-height:var(--line-height-body)!important;
+    .cdx-list, .cdx-list__item {
+      font-size: var(--size-body) !important;
+      line-height: var(--step) !important;  /* 1 × --step */
     }
+    .cdx-list     { padding: 0 0 0 28px !important }
+    .cdx-list__item { padding: 0 !important }
 
-    .cdx-list__item{
-      margin:0!important;padding:0!important;
-      font-size:var(--font-size-body)!important;
-      line-height:var(--line-height-body)!important;
+    .ce-header {
+      min-height: var(--step);           /* 1 × --step */
+      padding: 0 !important;
+      font-weight: 600 !important;
+      line-height: var(--step) !important;
     }
-
-    .ce-header{
-      min-height:var(--line-height-heading);
-      padding:0!important;
-      font-weight:700!important;
-      line-height:var(--line-height-heading)!important;
+    h1.ce-header {
+      min-height: calc(var(--step) * 2);          /* 2 × --step */
+      font-size: var(--size-h1) !important;
+      line-height: calc(var(--step) * 2) !important;
     }
+    h2.ce-header { font-size: var(--size-h2) !important }
+    h3.ce-header { font-size: var(--size-h3) !important }
 
-    h1.ce-header{
-      min-height:calc(var(--line-height-heading) * 2);
-      font-size:var(--font-size-h1)!important;
-      line-height:calc(var(--line-height-heading) * 2)!important;
-    }
-
-    h2.ce-header{font-size:var(--font-size-h2)!important}
-    h3.ce-header{font-size:var(--font-size-h3)!important}
-
+    /* ── TOOLBAR OVERRIDES ── */
     .ce-toolbar__plus,
     .ce-toolbar__settings-btn,
     .ce-inline-toolbar,
     .ce-conversion-toolbar,
     .ce-popover,
     .tc-popover,
-    .cdx-search-field{
-      border:0!important;
-      box-shadow:none!important;
-      background:var(--toolbar-bg)!important;
-      color:var(--text)!important;
+    .cdx-search-field {
+      border: 0 !important;
+      box-shadow: none !important;
+      background: var(--tool-bg) !important;
+      color: var(--text) !important;
     }
-
     .ce-toolbar__plus:hover,
     .ce-toolbar__settings-btn:hover,
     .ce-popover-item:hover,
-    .ce-conversion-toolbar__label:hover{
-      background:var(--toolbar-hover)!important;
+    .ce-conversion-toolbar__label:hover { background: var(--tool-hover) !important }
+
+    .cdx-input {
+      border: 0 !important;
+      box-shadow: none !important;
+      background: var(--input-bg) !important;
+      color: var(--text) !important;
     }
 
-    .cdx-input{
-      border:0!important;
-      box-shadow:none!important;
-      background:var(--input-bg)!important;
-      color:var(--text)!important;
+    .ce-block--selected .ce-block__content { background: var(--selection) !important }
+    .ce-delimiter { color: var(--muted) !important }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      :root { --sidebar-width: 200px; --pad-left: 84px; --margin-x: 60px }
     }
-
-    .ce-block--selected .ce-block__content{background:var(--selection)!important}
-    .ce-delimiter{color:var(--muted)!important}
-
-    @media (max-width:900px){
-      :root{
-        --sidebar-width:210px;
-        --content-left-padding:88px;
-        --margin-line-x:62px;
+    @media (max-width: 720px) {
+      :root {
+        --topbar-height: 48px; --sidebar-width: 68px;
+        --pad-left: 58px; --pad-right: 16px;
+        --margin-x: 38px; --size-body: 18px;
       }
-    }
-
-    @media (max-width:720px){
-      :root{
-        --topbar-height:60px;--sidebar-width:84px;
-        --content-left-padding:66px;--content-right-padding:16px;
-        --margin-line-x:44px;--font-size-body:18px;
-      }
-
-      .brand-copy,.nav-label,.nav-item span,.topbar-subtitle{display:none}
-      .brand{justify-content:center}
-      .nav-item{text-align:center;padding:12px 8px}
-      .topbar{padding:0 12px}
-      .topbar-title{font-size:18px}
-      .topbar-right{gap:6px}
-      .theme-btn{padding:9px 10px;font-size:13px}
+      .brand-copy, .nav-label, .nav-item span, .topbar-subtitle { display: none }
+      .brand { justify-content: center }
+      .nav-item { text-align: center; padding: 10px 6px }
+      .topbar { padding: 0 12px }
+      .topbar-right { gap: 6px }
     }
   </style>
 </head>
@@ -264,9 +320,7 @@
       <p class="topbar-subtitle">Institucional (local)</p>
     </div>
     <div class="topbar-right">
-      <button class="theme-btn ghost" id="themeToggleBtn" type="button" aria-label="Alternar tema">
-        Macchiato
-      </button>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema">Claro</button>
     </div>
   </header>
 
@@ -278,12 +332,10 @@
         <p class="brand-subtitle">Adicione suas informações</p>
       </div>
     </div>
-
     <div class="nav-group">
       <div class="nav-label">Principal</div>
       <button class="nav-item active" type="button"><span>Lembretes</span></button>
     </div>
-
     <div class="nav-group">
       <div class="nav-label">Conteúdo</div>
       <button class="nav-item" type="button"><span>Recentes</span></button>
@@ -307,27 +359,16 @@
   <script>
     (() => {
       const root = document.documentElement;
-      const themeToggleBtn = document.getElementById("themeToggleBtn");
+      const btn  = document.getElementById("themeBtn");
 
-      const setTheme = theme => {
-        root.setAttribute("data-theme", theme);
-        if (themeToggleBtn) {
-          themeToggleBtn.textContent = theme === "macchiato" ? "Macchiato" : "Mocha";
-        }
-      };
-
-      themeToggleBtn?.addEventListener("click", () => {
-        const currentTheme = root.getAttribute("data-theme");
-        const nextTheme = currentTheme === "macchiato" ? "mocha" : "macchiato";
-        setTheme(nextTheme);
+      btn.addEventListener("click", () => {
+        const next = root.getAttribute("data-theme") === "claro" ? "escuro" : "claro";
+        root.setAttribute("data-theme", next);
+        btn.textContent = next === "claro" ? "Claro" : "Escuro";
       });
 
-      setTheme(root.getAttribute("data-theme") || "macchiato");
-      const ListTool = window.EditorjsList || window.List;
-      const HeaderTool = window.Header;
-
-      if (!window.EditorJS || !HeaderTool || !ListTool) {
-        console.error("Editor.js ou ferramentas não foram carregados corretamente.");
+      if (!window.EditorJS || !window.Header || !(window.EditorjsList || window.List)) {
+        console.error("Editor.js ou ferramentas não foram carregadas.");
         return;
       }
 
@@ -335,45 +376,17 @@
         holder: "editorjs",
         placeholder: "Digite seu conteúdo aqui...",
         tools: {
-          header: {
-            class: HeaderTool,
-            inlineToolbar: true,
-            config: { placeholder: "Título" }
-          },
-          list: {
-            class: ListTool,
-            inlineToolbar: true
-          }
+          header: { class: window.Header, inlineToolbar: true, config: { placeholder: "Título" } },
+          list:   { class: window.EditorjsList || window.List, inlineToolbar: true }
         },
         data: {
           blocks: [
-            {
-              type: "header",
-              data: { text: "Lib Editor.js", level: 2 }
-            },
-            {
-              type: "paragraph",
-              data: { text: "É só um template. falta backend, banco, auth opcional, sincronização, muita coisa" }
-            },
-            {
-              type: "paragraph",
-              data: { text: "Pouco tempo pra fazer isso agora, vou deixar pra depois." }
-            },
-            {
-              type: "paragraph",
-              data: { text: "" }
-            },
-            {
-              type: "header",
-              data: { text: "coisas que tem suportadas pelo Editor.js", level: 2 }
-            },
-            {
-              type: "list",
-              data: {
-                style: "unordered",
-                items: ["Listas", "Paragrafos", "Titulos", "Check-lists", "Etc"]
-              }
-            }
+            { type: "header",    data: { text: "Lib Editor.js", level: 2 } },
+            { type: "paragraph", data: { text: "É só um template. Falta backend, banco, auth opcional, sincronização, muita coisa." } },
+            { type: "paragraph", data: { text: "Pouco tempo pra fazer isso agora, vou deixar pra depois." } },
+            { type: "paragraph", data: { text: "" } },
+            { type: "header",    data: { text: "Coisas suportadas pelo Editor.js", level: 2 } },
+            { type: "list",      data: { style: "unordered", items: ["Listas", "Parágrafos", "Títulos", "Check-lists", "Etc"] } }
           ]
         }
       });
