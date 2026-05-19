@@ -1,0 +1,59 @@
+/*
+ * ── TEMAS ────────────────────────────────────────────────────
+ *
+ * Para adicionar um novo tema:
+ *   1. Crie um bloco html[data-theme="nome"] { ... }
+ *   2. Defina todas as variáveis listadas abaixo
+ *   3. Atualize o toggle em application.js se necessário
+ *
+ * Variáveis obrigatórias por tema:
+ *   --bg --topbar --sidebar --paper
+ *   --text --subtext --muted
+ *   --line-blue --line-red --divide
+ *   --hover --active
+ *   --tool-bg --tool-hover --input-bg --selection
+ *   --accent --accent-fg
+ *
+ * ─────────────────────────────────────────────────────────── */
+
+html[data-theme="claro"] {
+  --bg:        #e6e1d9;
+  --topbar:    #ddd8d0;
+  --sidebar:   #e1dcd4;
+  --paper:     #f0ebe2;
+  --text:      #201c13;
+  --subtext:   #574f43;
+  --muted:     #8a7e6e;
+  --line-blue: rgba(55, 100, 168, .30);
+  --line-red:  rgba(158, 40, 40, .22);
+  --divide:    rgba(0, 0, 0, .08);
+  --hover:     #d4cfc8;
+  --active:    #cac5be;
+  --tool-bg:   #d9d4cc;
+  --tool-hover:#cec9c2;
+  --input-bg:  #e6e1d9;
+  --selection: rgba(55, 100, 168, .08);
+  --accent:    #3a6aad;
+  --accent-fg: #fff;
+}
+
+html[data-theme="escuro"] {
+  --bg:        #0d0c0a;
+  --topbar:    #0a0908;
+  --sidebar:   #111009;
+  --paper:     #121109;
+  --text:      #c8bba4;
+  --subtext:   #7d7264;
+  --muted:     #524940;
+  --line-blue: rgba(80, 120, 175, .15);
+  --line-red:  rgba(155, 65, 45, .14);
+  --divide:    rgba(255, 255, 255, .05);
+  --hover:     #1b1a16;
+  --active:    #21201b;
+  --tool-bg:   #18170f;
+  --tool-hover:#1e1d14;
+  --input-bg:  #0d0c0a;
+  --selection: rgba(80, 120, 175, .10);
+  --accent:    #7496bc;
+  --accent-fg: #0a0908;
+}

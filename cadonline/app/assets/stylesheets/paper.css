@@ -1,0 +1,51 @@
+/*
+ * ── PAPEL ────────────────────────────────────────────────────
+ *
+ * .paper::before desenha a grade usando --step e --top-offset.
+ *
+ * Para decorações futuras (sem refatorar):
+ *   - Variante sem linhas: sobrescreva --line-blue e --line-red
+ *     para transparent no tema ou numa classe modificadora.
+ *   - Decoração extra: use .paper::after (disponível e vazio).
+ *   - Papel pontilhado: crie .paper--pontilhado e sobrescreva
+ *     apenas o background do ::before.
+ *
+ * ─────────────────────────────────────────────────────────── */
+
+.paper {
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+/*
+ * Grade: linhas horizontais a cada --step com offset --top-offset.
+ * Margem vertical em --margin-x com espessura --line-thickness.
+ */
+.paper::before {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--step) - var(--line-thickness)),
+      var(--line-blue) calc(var(--step) - var(--line-thickness)),
+      var(--line-blue) var(--step)
+    ),
+    linear-gradient(
+      to right,
+      transparent var(--margin-x),
+      var(--line-red)  var(--margin-x),
+      var(--line-red)  calc(var(--margin-x) + var(--line-thickness)),
+      transparent      calc(var(--margin-x) + var(--line-thickness))
+    );
+  background-position: 0 var(--top-offset), 0 0;
+}
+
+.editor-shell {
+  position: relative; z-index: 1;
+  padding: var(--pad-top) var(--pad-right) 48px var(--pad-left);
+}

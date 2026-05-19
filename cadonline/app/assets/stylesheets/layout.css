@@ -1,0 +1,22 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+}
+body {
+    overflow: hidden
+}
+
+.main {
+  position: fixed;
+  top: var(--topbar-height); left: var(--sidebar-width); right: 0; bottom: 0;
+  overflow: auto; background: var(--bg);
+}
+.main-inner {
+    max-width: 880px;
+    min-height: 100%;
+    margin: 0 auto
+}

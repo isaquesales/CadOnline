@@ -1,0 +1,38 @@
+/*
+ * ── GRADE VERTICAL ───────────────────────────────────────────
+ *
+ * Toda a tipografia do editor obedece à mesma unidade: --step.
+ * As linhas do papel são desenhadas com esse step.
+ * Qualquer line-height deve ser múltiplo exato de --step.
+ *
+ *   Parágrafo  →  1 × --step  =  36px
+ *   H2, H3     →  1 × --step  =  36px  (tamanho muda, step não)
+ *   H1         →  2 × --step  =  72px
+ *
+ * --top-offset alinha a primeira linha do papel com a
+ * primeira linha de texto. Deve ser igual a --pad-top.
+ * --pad-left deve sempre ser maior que --margin-x.
+ *
+ * ─────────────────────────────────────────────────────────── */
+:root {
+  --step: 36px;
+
+  --topbar-height: 52px;
+  --sidebar-width: 236px;
+
+  --line-thickness: 1.5px;
+  --top-offset: 18px;   /* = --pad-top: alinha grade com texto */
+  --margin-x: 74px;     /* deve ser < --pad-left              */
+
+  --pad-left:  98px;
+  --pad-right: 36px;
+  --pad-top:   18px;    /* = --top-offset                     */
+
+  --font-ui:      system-ui, -apple-system, sans-serif;
+  --font-content: 'EB Garamond', Georgia, serif;
+
+  --size-body: 20px;    /* line-height = 1 × --step */
+  --size-h1:   36px;    /* line-height = 2 × --step */
+  --size-h2:   26px;    /* line-height = 1 × --step */
+  --size-h3:   21px;    /* line-height = 1 × --step */
+}

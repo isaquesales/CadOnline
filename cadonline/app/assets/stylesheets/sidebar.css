@@ -1,0 +1,26 @@
+.sidebar {
+  position: fixed; top: var(--topbar-height); left: 0; bottom: 0;
+  width: var(--sidebar-width);
+  overflow: auto; padding: 16px 10px;
+  background: var(--sidebar);
+  border-right: 1px solid var(--divide);
+}
+
+.nav-group { margin-top: 6px }
+.nav-label {
+  padding: 4px 10px 3px;
+  font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--muted);
+}
+.nav-item {
+  display: block; width: 100%;
+  padding: 8px 10px;
+  border: 0; border-radius: 7px;
+  background: transparent; color: var(--subtext);
+  text-align: left; cursor: pointer;
+  font-size: 13px; font-weight: 500;
+  font-family: var(--font-ui);
+  transition: background .1s, color .1s;
+}
+.nav-item:hover  { background: var(--hover);  color: var(--text) }
+.nav-item.active { background: var(--active); color: var(--text); font-weight: 600 }

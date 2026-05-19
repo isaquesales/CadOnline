@@ -1,0 +1,37 @@
+<section class="paper">
+  <div class="editor-shell">
+    <div id="editorjs"></div>
+  </div>
+</section>
+
+<% content_for :scripts do %>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (!window.EditorJS || !window.Header || !(window.EditorjsList || window.List)) {
+        console.error("Editor.js ou ferramentas não foram carregadas.");
+        return;
+      }
+
+      new EditorJS({
+        holder: "editorjs",
+        placeholder: "Digite seu conteúdo aqui...",
+        tools: {
+          header: { class: window.Header, inlineToolbar: true, config: { placeholder: "Título" } },
+          list:   { class: window.EditorjsList || window.List, inlineToolbar: true }
+        },
+        data: {
+          blocks: [
+            { type: "header",    data: { text: "Lib Editor.js", level: 2 } },
+            { type: "paragraph", data: { text: "É só um template. Falta backend, banco, auth, sincronização..." } },
+            { type: "paragraph", data: { text: "" } },
+            { type: "header",    data: { text: "Coisas suportadas pelo Editor.js", level: 2 } },
+            { type: "list",      data: { style: "unordered", items: ["Listas", "Parágrafos", "Títulos", "Check-lists"] } }
+          ]
+        }
+      });
+    });
+  </script>
+<% end %>

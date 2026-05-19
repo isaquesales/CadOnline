@@ -1,29 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR" data-theme="<%= current_theme %>">
   <head>
-    <title><%= content_for(:title) || "Cadonline" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Cadonline">
-    <meta name="mobile-web-app-capable" content="yes">
+    <title>CadOnline</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= yield :head %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "grid", "themes", "layout", "topbar", "sidebar", "paper", "editor", "responsive", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-
   <body>
-    <%= yield %>
+    <%= render "shared/topbar" %>
+    <%= render "shared/sidebar" %>
+
+    <main class="main">
+      <div class="main-inner">
+        <%= yield %>
+      </div>
+    </main>
+
+    <%= yield :scripts %>
   </body>
 </html>

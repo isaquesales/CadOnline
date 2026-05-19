@@ -1,0 +1,76 @@
+/*
+ * ── EDITOR.JS OVERRIDES ──────────────────────────────────────
+ *
+ * GRADE: todos os elementos de texto respeitam --step.
+ * Não altere font-size sem ajustar line-height proporcionalmente.
+ *
+ * ─────────────────────────────────────────────────────────── */
+
+#editorjs { min-height: calc(100vh - var(--topbar-height) - 40px) }
+.codex-editor__redactor { padding-bottom: 0 !important }
+.ce-block, .ce-block__content { margin: 0 !important }
+.ce-block__content, .ce-toolbar__content { max-width: 100% }
+.ce-block__content > * { margin: 0 !important }
+
+.ce-paragraph, .cdx-list, .cdx-list__item, .ce-header {
+  margin: 0 !important;
+  color: var(--text) !important;
+  font-family: var(--font-content) !important;
+  gap: 0 !important;
+}
+
+.ce-paragraph {
+  min-height: var(--step);          /* 1 × --step */
+  padding: 0 !important;
+  font-size: var(--size-body) !important;
+  line-height: var(--step) !important;
+}
+
+.cdx-list, .cdx-list__item {
+  font-size: var(--size-body) !important;
+  line-height: var(--step) !important;  /* 1 × --step */
+}
+.cdx-list       { padding: 0 0 0 28px !important }
+.cdx-list__item { padding: 0 !important }
+
+.ce-header {
+  min-height: var(--step);          /* 1 × --step */
+  padding: 0 !important;
+  font-weight: 600 !important;
+  line-height: var(--step) !important;
+}
+h1.ce-header {
+  min-height: calc(var(--step) * 2);       /* 2 × --step */
+  font-size: var(--size-h1) !important;
+  line-height: calc(var(--step) * 2) !important;
+}
+h2.ce-header { font-size: var(--size-h2) !important }
+h3.ce-header { font-size: var(--size-h3) !important }
+
+/* Toolbar */
+.ce-toolbar__plus,
+.ce-toolbar__settings-btn,
+.ce-inline-toolbar,
+.ce-conversion-toolbar,
+.ce-popover,
+.tc-popover,
+.cdx-search-field {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: var(--tool-bg) !important;
+  color: var(--text) !important;
+}
+.ce-toolbar__plus:hover,
+.ce-toolbar__settings-btn:hover,
+.ce-popover-item:hover,
+.ce-conversion-toolbar__label:hover { background: var(--tool-hover) !important }
+
+.cdx-input {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: var(--input-bg) !important;
+  color: var(--text) !important;
+}
+
+.ce-block--selected .ce-block__content { background: var(--selection) !important }
+.ce-delimiter { color: var(--muted) !important }
