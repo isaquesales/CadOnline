@@ -1,51 +1,109 @@
-/*
- * ── PAPEL ────────────────────────────────────────────────────
- *
- * .paper::before desenha a grade usando --step e --top-offset.
- *
- * Para decorações futuras (sem refatorar):
- *   - Variante sem linhas: sobrescreva --line-blue e --line-red
- *     para transparent no tema ou numa classe modificadora.
- *   - Decoração extra: use .paper::after (disponível e vazio).
- *   - Papel pontilhado: crie .paper--pontilhado e sobrescreva
- *     apenas o background do ::before.
- *
- * ─────────────────────────────────────────────────────────── */
+.document-workspace {
+  display: flex;
+  justify-content: center;
+}
 
-.paper {
+.document-canvas {
+  --sheet-width: calc(var(--sheet-width-mm) * 3.7795275591px);
+  --sheet-height: calc(var(--sheet-height-mm) * 3.7795275591px);
+  --sheet-padding-top: calc(var(--sheet-padding-top-mm) * 3.7795275591px);
+  --sheet-padding-right: calc(var(--sheet-padding-right-mm) * 3.7795275591px);
+  --sheet-padding-bottom: calc(var(--sheet-padding-bottom-mm) * 3.7795275591px);
+  --sheet-padding-left: calc(var(--sheet-padding-left-mm) * 3.7795275591px);
+  --paper-line-bg: transparent;
+  --paper-line-offset-y: 0px;
+  --paper-overlay-bg: transparent;
+  --paper-watermark-top: none;
+  --paper-watermark-bottom: none;
+  --paper-watermark-opacity: 1;
+
   position: relative;
-  min-height: 100%;
-  overflow: hidden;
+  width: var(--sheet-width);
+}
+
+.document-sheets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sheet-gap);
+}
+
+.paper-sheet {
+  position: relative;
+  min-height: var(--sheet-height);
   background: var(--paper);
+  border: 1px solid var(--divide);
 }
 
-/*
- * Grade: linhas horizontais a cada --step com offset --top-offset.
- * Margem vertical em --margin-x com espessura --line-thickness.
- */
-.paper::before {
+.paper-sheet::before {
   content: "";
-  position: absolute; inset: 0;
+  position: absolute;
+  inset: 0;
+  background: var(--paper-line-bg);
+  background-position: 0 var(--paper-line-offset-y), 0 0;
   pointer-events: none;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent calc(var(--step) - var(--line-thickness)),
-      var(--line-blue) calc(var(--step) - var(--line-thickness)),
-      var(--line-blue) var(--step)
-    ),
-    linear-gradient(
-      to right,
-      transparent var(--margin-x),
-      var(--line-red)  var(--margin-x),
-      var(--line-red)  calc(var(--margin-x) + var(--line-thickness)),
-      transparent      calc(var(--margin-x) + var(--line-thickness))
-    );
-  background-position: 0 var(--top-offset), 0 0;
 }
 
-.editor-shell {
-  position: relative; z-index: 1;
-  padding: var(--pad-top) var(--pad-right) 48px var(--pad-left);
+.paper-sheet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--paper-watermark-top), var(--paper-watermark-bottom), var(--paper-overlay-bg);
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-position: top center, bottom center, center;
+  background-size: auto, auto, cover;
+  opacity: var(--paper-watermark-opacity);
+  pointer-events: none;
+}
+
+.document-editor-shell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: var(--sheet-height);
+  padding: var(--sheet-padding-top) var(--sheet-padding-right) var(--sheet-padding-bottom) var(--sheet-padding-left);
+  z-index: 2;
+}
+
+#editorjs { min-height: calc(var(--sheet-height) - var(--sheet-padding-top) - var(--sheet-padding-bottom)) }
+
+.document-start-hint {
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  border: 1px solid var(--divide);
+  background: var(--paper);
+  color: var(--subtext);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.document-start-hint strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+@media print {
+  .topbar,
+  .sidebar,
+  .document-controls { display: none !important }
+
+  body,
+  .main,
+  .main-inner {
+    overflow: visible;
+    position: static;
+    background: #fff;
+    padding: 0;
+    margin: 0;
+  }
+
+  .document-canvas,
+  .document-sheets,
+  .paper-sheet,
+  .document-editor-shell { width: 100% }
+
+  .paper-sheet {
+    border: 0;
+    break-after: page;
+  }
 }

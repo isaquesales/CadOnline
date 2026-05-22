@@ -1,0 +1,7 @@
+<section class="auth-shell">
+  <h2>Minha conta</h2>
+  <p><strong>Nome:</strong> <%= current_user.full_name %></p>
+  <p><strong>E-mail:</strong> <%= current_user.email %></p>
+  <p><strong>Termos aceitos em:</strong> <%= current_user.accepted_terms_at %></p>
+  <%= button_to "Delete my data", destroy_data_account_path, method: :delete, data: { turbo_confirm: "Excluir todos os seus dados?" }, class: "theme-btn" %>
+</section>

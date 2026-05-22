@@ -1,13 +1,20 @@
 <aside class="sidebar">
-
   <div class="nav-group">
-    <div class="nav-label">Principal</div>
-    <button class="nav-item active" type="button"><span>Lembretes</span></button>
+    <div class="nav-label">Ações</div>
+    <%= button_to "Novo documento", documents_path, method: :post, class: "nav-item" %>
   </div>
 
   <div class="nav-group">
-    <div class="nav-label">Conteúdo</div>
-    <button class="nav-item" type="button"><span>Recentes</span></button>
-    <button class="nav-item" type="button"><span>Favoritos</span></button>
+    <div class="nav-label">Favoritos</div>
+    <% @sidebar_favorites.each do |doc| %>
+      <%= link_to doc.title, root_path(document_id: doc.id), class: "nav-item" %>
+    <% end %>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Documentos</div>
+    <% @sidebar_documents.each do |doc| %>
+      <%= link_to doc.title, root_path(document_id: doc.id), class: "nav-item #{'active' if @document&.id == doc.id}" %>
+    <% end %>
   </div>
 </aside>

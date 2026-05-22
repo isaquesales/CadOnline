@@ -1,0 +1,18 @@
+.document-canvas[data-paper-style="ruled"] {
+  --paper-line-offset-y: var(--sheet-padding-top);
+  --paper-line-bg:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--step) - var(--line-thickness)),
+      var(--line-blue) calc(var(--step) - var(--line-thickness)),
+      var(--line-blue) var(--step)
+    ),
+    linear-gradient(
+      to right,
+      transparent var(--margin-x),
+      var(--line-red) var(--margin-x),
+      var(--line-red) calc(var(--margin-x) + var(--line-thickness)),
+      transparent calc(var(--margin-x) + var(--line-thickness))
+    );
+}

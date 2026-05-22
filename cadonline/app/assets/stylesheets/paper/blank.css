@@ -1,0 +1,3 @@
+.document-canvas[data-paper-style="blank"] {
+  --paper-line-bg: transparent;
+}

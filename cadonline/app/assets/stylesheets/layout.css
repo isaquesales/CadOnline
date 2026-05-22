@@ -6,17 +6,71 @@ html, body {
   color: var(--text);
   font-family: var(--font-ui);
 }
-body {
-    overflow: hidden
-}
+
+body { overflow: hidden }
 
 .main {
   position: fixed;
-  top: var(--topbar-height); left: var(--sidebar-width); right: 0; bottom: 0;
-  overflow: auto; background: var(--bg);
+  top: var(--topbar-height);
+  left: var(--sidebar-width);
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  background: var(--bg);
 }
+
 .main-inner {
-    max-width: 880px;
-    min-height: 100%;
-    margin: 0 auto
+  width: min(100%, 980px);
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 24px 18px 40px;
+}
+
+@media (max-width: 900px) {
+  :root { --sidebar-width: 200px }
+}
+
+@media (max-width: 720px) {
+  :root { --topbar-height: 48px; --sidebar-width: 68px }
+  .main-inner { padding: 14px 10px 20px }
+}
+
+.auth-shell {
+  max-width: 520px;
+  margin: 40px auto;
+  padding: 18px;
+  border: 1px solid var(--divide);
+  background: var(--paper);
+}
+
+.auth-form {
+  display: grid;
+  gap: 8px;
+}
+
+.auth-form input {
+  border: 1px solid var(--divide);
+  background: transparent;
+  color: var(--text);
+  padding: 8px;
+}
+
+.terms-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.flash-msg {
+  padding: 8px 10px;
+  margin: 10px 0;
+  border: 1px solid var(--divide);
+  background: var(--paper);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.flash-msg-alert {
+  color: #8f2e2e;
 }

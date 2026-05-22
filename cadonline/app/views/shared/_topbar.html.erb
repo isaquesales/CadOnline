@@ -1,11 +1,18 @@
 <header class="topbar">
   <div class="topbar-left">
     <h1 class="topbar-title">CadOnline</h1>
-    <p class="topbar-subtitle">Institucional (local)</p>
+    <p class="topbar-subtitle">Documento ativo (local)</p>
   </div>
   <div class="topbar-right">
-    <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema">
-      Claro
-    </button>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema">Claro</button>
+    <details class="account-menu">
+      <summary class="theme-btn">Conta</summary>
+      <div class="account-menu-panel">
+        <p class="account-menu-name"><%= current_user.full_name %></p>
+        <p class="account-menu-email"><%= current_user.email %></p>
+        <%= button_to "Sair", logout_path, method: :delete, class: "account-menu-btn" %>
+        <%= button_to "Delete my data", destroy_data_account_path, method: :delete, data: { turbo_confirm: "Isso removerá sua conta e dados definitivamente. Continuar?" }, class: "account-menu-btn account-menu-btn-danger" %>
+      </div>
+    </details>
   </div>
 </header>

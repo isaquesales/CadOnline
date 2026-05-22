@@ -11,15 +11,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
-    <%= stylesheet_link_tag "application", "grid", "themes", "layout", "topbar", "sidebar", "paper", "editor", "responsive", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "grid", "themes", "layout", "topbar", "sidebar", "paper", "paper/ruled", "paper/blank", "paper/grid", "paper/kitalua", "document/controls", "editor", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
   <body>
-    <%= render "shared/topbar" %>
-    <%= render "shared/sidebar" %>
+    <% if logged_in? %>
+      <%= render "shared/topbar" %>
+      <%= render "shared/sidebar" %>
+    <% end %>
 
-    <main class="main">
+    <main class="<%= logged_in? ? 'main' : '' %>">
       <div class="main-inner">
+        <% if flash[:notice].present? %><p class="flash-msg"><%= flash[:notice] %></p><% end %>
+        <% if flash[:alert].present? %><p class="flash-msg flash-msg-alert"><%= flash[:alert] %></p><% end %>
         <%= yield %>
       </div>
     </main>

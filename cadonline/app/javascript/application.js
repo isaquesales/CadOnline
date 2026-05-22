@@ -1,11 +1,10 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import "@hotwired/turbo-rails"
 import "controllers"
+import { initDocumentEditor } from "lib/document_editor"
 
-// Theme toggle
-document.addEventListener("DOMContentLoaded", () => {
+function initThemeToggle() {
   const root = document.documentElement;
-  const btn  = document.getElementById("themeBtn");
+  const btn = document.getElementById("themeBtn");
   if (!btn) return;
 
   btn.addEventListener("click", () => {
@@ -13,4 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
     root.setAttribute("data-theme", next);
     btn.textContent = next === "claro" ? "Claro" : "Escuro";
   });
+}
+
+document.addEventListener("turbo:load", () => {
+  initThemeToggle();
+  initDocumentEditor();
 });

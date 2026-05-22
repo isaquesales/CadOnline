@@ -1,0 +1,16 @@
+<section class="document-workspace" data-document-id="<%= document.id %>">
+  <article class="document-canvas" id="documentCanvas" data-paper-style="<%= document.paper_style %>" style="--kitalua-watermark: url('<%= asset_path("kitalua.png") %>');">
+    <%= render "pages/partials/document_controls", document: document %>
+
+    <div class="document-sheets" id="documentSheets" aria-hidden="true">
+      <section class="paper-sheet"></section>
+    </div>
+
+    <div class="document-editor-shell" id="documentEditorShell">
+      <div class="document-start-hint" id="documentStartHint">
+        Documento pronto. Clique em <strong>Configurar documento</strong> para trocar o papel, importar/exportar ou imprimir.
+      </div>
+      <div id="editorjs" data-document-content="<%= ERB::Util.html_escape(document.content.to_json) %>"></div>
+    </div>
+  </article>
+</section>

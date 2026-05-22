@@ -1,0 +1,25 @@
+<div class="document-controls" id="documentControls">
+  <button class="control-btn" id="documentMenuBtn" type="button" aria-expanded="false" aria-controls="documentMenu">
+    Configurar documento
+  </button>
+
+  <div class="document-menu" id="documentMenu" hidden>
+    <p class="control-note">Configuração do documento</p>
+    <label class="control-label" for="paperStyleSelect">Tipo de papel</label>
+    <select class="control-select" id="paperStyleSelect" aria-label="Selecionar tipo de papel">
+      <option value="ruled" <%= "selected" if document.paper_style == "ruled" %>>Ruled paper</option>
+      <option value="blank" <%= "selected" if document.paper_style == "blank" %>>Papel em branco</option>
+      <option value="grid" <%= "selected" if document.paper_style == "grid" %>>Papel quadriculado</option>
+      <option value="kitalua" <%= "selected" if document.paper_style == "kitalua" %>>Kita/Lua</option>
+    </select>
+
+    <div class="control-actions">
+      <button class="control-btn" id="printDocumentBtn" type="button">Imprimir</button>
+      <button class="control-btn" id="favoriteDocumentBtn" type="button">Favoritar</button>
+      <button class="control-btn" id="exportCadBtn" type="button">Exportar .cad</button>
+      <button class="control-btn" id="importCadBtn" type="button">Importar .cad</button>
+      <input id="cadImportInput" type="file" accept=".cad,application/json" hidden>
+    </div>
+    <p class="control-note">Dica: pressione Esc para fechar este menu.</p>
+  </div>
+</div>

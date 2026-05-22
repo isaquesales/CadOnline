@@ -1,0 +1,20 @@
+.document-canvas[data-paper-style="kitalua"] {
+  --paper-line-offset-y: var(--sheet-padding-top);
+  --paper-line-bg:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--step) - var(--line-thickness)),
+      var(--line-blue) calc(var(--step) - var(--line-thickness)),
+      var(--line-blue) var(--step)
+    );
+  --paper-watermark-top: none;
+  --paper-watermark-bottom: none;
+  --paper-overlay-bg: var(--kitalua-watermark, none);
+  --paper-watermark-opacity: 0.18;
+}
+
+.document-canvas[data-paper-style="kitalua"] .paper-sheet::after {
+  background-size: auto, auto, min(220px, 52%);
+  background-position: top center, bottom center, center;
+}

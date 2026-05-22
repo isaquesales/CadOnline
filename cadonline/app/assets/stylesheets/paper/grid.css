@@ -1,0 +1,12 @@
+.document-canvas[data-paper-style="grid"] {
+  --paper-line-offset-y: var(--sheet-padding-top);
+  --paper-line-bg:
+    linear-gradient(var(--line-blue) var(--line-thickness), transparent var(--line-thickness)),
+    linear-gradient(90deg, var(--line-blue) var(--line-thickness), transparent var(--line-thickness));
+  --paper-overlay-bg: transparent;
+}
+
+.document-canvas[data-paper-style="grid"] .paper-sheet::before {
+  background-size: var(--step) var(--step), var(--step) var(--step);
+  background-position: 0 var(--paper-line-offset-y), 0 var(--paper-line-offset-y);
+}
