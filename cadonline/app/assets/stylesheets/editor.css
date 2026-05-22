@@ -31,10 +31,10 @@
   line-height: var(--step) !important;
 }
 
-.cdx-list { padding: 0 0 0 28px !important }
+.cdx-list { padding: 0 0 0 24px !important }
 .cdx-list__item { padding: 0 !important; margin: 0 !important }
 .cdx-list__item-content { margin: 0 !important; padding: 0 !important }
-.cdx-list__item-children { margin: 0 !important; padding-left: 28px !important }
+.cdx-list__item-children { margin: 0 !important; padding-left: 24px !important }
 
 .ce-header {
   min-height: var(--step);
@@ -51,6 +51,14 @@ h1.ce-header {
 h2.ce-header { font-size: var(--size-h2) !important }
 h3.ce-header { font-size: var(--size-h3) !important }
 
+.cdx-list-checklist .cdx-list__item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.cdx-list__checkbox { margin-right: 6px !important }
+
 .cdx-quote {
   margin: var(--step) 0 !important;
   padding: 0 0 0 16px !important;
@@ -63,10 +71,35 @@ h3.ce-header { font-size: var(--size-h3) !important }
 }
 .cdx-quote__caption { color: var(--muted) !important }
 
-.tc-wrap { margin: var(--step) 0 !important }
-.tc-table { border-collapse: collapse !important; width: 100% !important; background: var(--paper) !important }
-.tc-row, .tc-cell { border: 1px solid var(--divide) !important; background: var(--paper) !important }
-.tc-cell { min-height: var(--step) !important; height: var(--step) !important; padding: 0 8px !important; line-height: var(--step) !important }
+.tc-wrap {
+  margin: var(--step) 0 !important;
+  line-height: var(--step) !important;
+}
+
+.tc-table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  background: var(--paper) !important;
+}
+
+.tc-row,
+.tc-cell {
+  border: 1px solid var(--divide) !important;
+  background: var(--paper) !important;
+}
+
+.tc-cell {
+  min-height: var(--step) !important;
+  height: var(--step) !important;
+  padding: 0 8px !important;
+  line-height: var(--step) !important;
+}
+
+.ce-delimiter {
+  min-height: var(--step) !important;
+  line-height: var(--step) !important;
+  color: var(--muted) !important;
+}
 
 .ce-toolbar__plus,
 .ce-toolbar__settings-btn,
@@ -96,7 +129,6 @@ h3.ce-header { font-size: var(--size-h3) !important }
   color: var(--text) !important;
 }
 
-.ce-delimiter { color: var(--muted) !important }
 .cdx-marker { background: var(--selection) !important; color: var(--text) !important }
 .inline-code { background: var(--tool-bg) !important; color: var(--text) !important; padding: 1px 4px !important }
 .ce-block--selected .ce-block__content { background: var(--selection) !important }

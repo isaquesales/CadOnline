@@ -14,24 +14,10 @@ let saveTimer = null;
 function buildEditorTools() {
   const tools = {
     header: { class: window.Header, inlineToolbar: true, config: { placeholder: "Título" } },
-    list: {
-      class: window.EditorjsList || window.List,
-      inlineToolbar: true,
-      config: {
-        defaultStyle: "unordered",
-        maxLevel: 1
-      }
-    }
+    list: { class: window.EditorjsList || window.List, inlineToolbar: true, config: { defaultStyle: "unordered", maxLevel: 1 } }
   };
 
-  if (window.Quote) {
-    tools.quote = {
-      class: window.Quote,
-      inlineToolbar: true,
-      config: { quotePlaceholder: "Citação", captionPlaceholder: "Fonte" }
-    };
-  }
-
+  if (window.Quote) tools.quote = { class: window.Quote, inlineToolbar: true, config: { quotePlaceholder: "Citação", captionPlaceholder: "Fonte" } };
   if (window.Delimiter) tools.delimiter = { class: window.Delimiter };
   if (window.Table) tools.table = { class: window.Table, inlineToolbar: true, config: { rows: 2, cols: 3 } };
   if (window.Marker) tools.marker = { class: window.Marker };
@@ -63,27 +49,33 @@ function renderSheetPlaceholders(canvas, sheetsLayer, editorShell) {
   canvas.style.setProperty("--sheet-count", pageCount.toString());
 }
 
-async function saveDocument(canvas) {
-  if (!editor) return;
+function documentId() {
+  return document.querySelector(".document-workspace")?.dataset?.documentId;
+}
 
-  const root = document.querySelector(".document-workspace");
-  const documentId = root?.dataset?.documentId;
-  if (!documentId) return;
+async function updateDocument(extra = {}) {
+  const id = documentId();
+  if (!id) return;
 
-  const payload = await editor.save();
-
-  await fetch(`/documents/${documentId}`, {
+  await fetch(`/documents/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       "X-CSRF-Token": document.querySelector("meta[name='csrf-token']")?.content || ""
     },
-    body: JSON.stringify({
-      document: {
-        content: payload,
-        paper_style: canvas.getAttribute("data-paper-style") || "ruled"
-      }
-    })
+    body: JSON.stringify({ document: extra })
+  });
+}
+
+async function saveDocument(canvas) {
+  if (!editor) return;
+  const payload = await editor.save();
+
+  await updateDocument({
+    content: payload,
+    paper_style: canvas.getAttribute("data-paper-style") || "ruled",
+    paper_tone: canvas.dataset.paperTone || "default",
+    title: document.getElementById("documentTitleInput")?.value || "Documento"
   });
 }
 
@@ -92,42 +84,34 @@ function queueSave(canvas) {
   saveTimer = setTimeout(() => saveDocument(canvas), 600);
 }
 
-function bindMenu() {
-  const menuBtn = document.getElementById("documentMenuBtn");
-  const menu = document.getElementById("documentMenu");
-  const controls = document.getElementById("documentControls");
-  if (!menuBtn || !menu || !controls) return;
-
-  menuBtn.addEventListener("click", () => {
-    const expanded = menuBtn.getAttribute("aria-expanded") === "true";
-    menuBtn.setAttribute("aria-expanded", String(!expanded));
-    menu.hidden = expanded;
-  });
-
-  document.addEventListener("click", (event) => {
-    if (!controls.contains(event.target)) {
-      menu.hidden = true;
-      menuBtn.setAttribute("aria-expanded", "false");
-    }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      menu.hidden = true;
-      menuBtn.setAttribute("aria-expanded", "false");
-    }
-  });
-}
-
 function bindPaperStyle(canvas) {
-  const select = document.getElementById("paperStyleSelect");
-  if (!select) return;
+  const styleSelect = document.getElementById("paperStyleSelect");
+  const toneSelect = document.getElementById("paperToneSelect");
+  const toneButtons = document.querySelectorAll(".tone-chip[data-tone-value]");
+  const titleInput = document.getElementById("documentTitleInput");
 
-  select.addEventListener("change", () => {
-    canvas.setAttribute("data-paper-style", select.value);
+  styleSelect?.addEventListener("change", () => {
+    canvas.setAttribute("data-paper-style", styleSelect.value);
     if (recalcSheets) recalcSheets();
     queueSave(canvas);
   });
+
+  function applyTone(toneValue) {
+    canvas.dataset.paperTone = toneValue;
+    canvas.classList.remove("paper-tone-none", "paper-tone-default", "paper-tone-ivory", "paper-tone-warm", "paper-tone-gray", "paper-tone-rose", "paper-tone-sky", "paper-tone-mint");
+    canvas.classList.add(`paper-tone-${toneValue}`);
+    if (toneSelect) toneSelect.value = toneValue;
+    toneButtons.forEach((btn) => btn.classList.toggle("active", btn.dataset.toneValue === toneValue));
+  }
+
+  toneButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      applyTone(btn.dataset.toneValue || "default");
+      queueSave(canvas);
+    });
+  });
+
+  titleInput?.addEventListener("change", () => queueSave(canvas));
 }
 
 async function downloadCad(canvas) {
@@ -155,9 +139,7 @@ async function importCad(file, canvas) {
   const text = await file.text();
   const payload = JSON.parse(text);
 
-  if (!payload || payload.format !== "cadonline-cad" || !payload.data) {
-    throw new Error("Arquivo .cad inválido.");
-  }
+  if (!payload || payload.format !== "cadonline-cad" || !payload.data) throw new Error("Arquivo .cad inválido.");
 
   await editor.render(payload.data);
   const style = payload.paper_style || "ruled";
@@ -171,15 +153,12 @@ async function importCad(file, canvas) {
 }
 
 async function toggleFavorite() {
-  const root = document.querySelector(".document-workspace");
-  const documentId = root?.dataset?.documentId;
-  if (!documentId) return;
+  const id = documentId();
+  if (!id) return;
 
-  await fetch(`/documents/${documentId}/toggle_favorite`, {
+  await fetch(`/documents/${id}/toggle_favorite`, {
     method: "PATCH",
-    headers: {
-      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']")?.content || ""
-    }
+    headers: { "X-CSRF-Token": document.querySelector("meta[name='csrf-token']")?.content || "" }
   });
 
   window.location.reload();
@@ -189,26 +168,16 @@ function bindDocumentActions(canvas) {
   const exportBtn = document.getElementById("exportCadBtn");
   const importBtn = document.getElementById("importCadBtn");
   const importInput = document.getElementById("cadImportInput");
-  const printBtn = document.getElementById("printDocumentBtn");
+  const printBtn = document.getElementById("printTopbarBtn");
   const favoriteBtn = document.getElementById("favoriteDocumentBtn");
 
-  exportBtn?.addEventListener("click", async () => {
-    try { await downloadCad(canvas); } catch (_error) { alert("Não foi possível exportar o documento."); }
-  });
-
+  exportBtn?.addEventListener("click", async () => { try { await downloadCad(canvas); } catch (_error) { alert("Não foi possível exportar o documento."); } });
   importBtn?.addEventListener("click", () => importInput?.click());
-
   importInput?.addEventListener("change", async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    try {
-      await importCad(file, canvas);
-    } catch (_error) {
-      alert("Falha ao importar arquivo .cad.");
-    } finally {
-      event.target.value = "";
-    }
+    try { await importCad(file, canvas); } catch (_error) { alert("Falha ao importar arquivo .cad."); } finally { event.target.value = ""; }
   });
 
   printBtn?.addEventListener("click", () => window.print());
@@ -216,17 +185,12 @@ function bindDocumentActions(canvas) {
 }
 
 async function initEditor(canvas, editorShell, sheetsLayer) {
-  if (!window.EditorJS || !window.Header || !(window.EditorjsList || window.List)) {
-    console.error("Editor.js ou ferramentas não foram carregadas.");
-    return;
-  }
+  if (!window.EditorJS || !window.Header || !(window.EditorjsList || window.List)) return;
 
   const holder = document.getElementById("editorjs");
   const raw = holder?.dataset?.documentContent;
   let data = DEFAULT_DATA;
-  if (raw) {
-    try { data = JSON.parse(raw); } catch (_error) { data = DEFAULT_DATA; }
-  }
+  if (raw) { try { data = JSON.parse(raw); } catch (_error) { data = DEFAULT_DATA; } }
 
   editor = new window.EditorJS({
     holder: "editorjs",
@@ -254,7 +218,6 @@ export function initDocumentEditor() {
 
   recalcSheets = () => renderSheetPlaceholders(canvas, sheetsLayer, editorShell);
 
-  bindMenu();
   bindPaperStyle(canvas);
   bindDocumentActions(canvas);
   initEditor(canvas, editorShell, sheetsLayer);

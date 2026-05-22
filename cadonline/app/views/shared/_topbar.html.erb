@@ -4,14 +4,27 @@
     <p class="topbar-subtitle">Documento ativo (local)</p>
   </div>
   <div class="topbar-right">
+    <%= link_to "Sobre", sobre_path, class: "theme-btn" %>
+    <%= link_to "Termos", terms_path, class: "theme-btn" %>
+
+    <% if defined?(@document) && @document.present? %>
+      <button class="theme-btn" id="printTopbarBtn" type="button">Imprimir</button>
+      <details class="document-menu-top">
+        <summary class="theme-btn">Configurar</summary>
+        <div class="document-menu-top-panel">
+          <%= render "pages/partials/document_controls", document: @document %>
+        </div>
+      </details>
+    <% end %>
+
     <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema">Claro</button>
     <details class="account-menu">
       <summary class="theme-btn">Conta</summary>
       <div class="account-menu-panel">
         <p class="account-menu-name"><%= current_user.full_name %></p>
         <p class="account-menu-email"><%= current_user.email %></p>
-        <%= button_to "Sair", logout_path, method: :delete, class: "account-menu-btn" %>
-        <%= button_to "Delete my data", destroy_data_account_path, method: :delete, data: { turbo_confirm: "Isso removerá sua conta e dados definitivamente. Continuar?" }, class: "account-menu-btn account-menu-btn-danger" %>
+        <%= button_to "Sair", logout_path, method: :delete, class: "account-menu-btn", form: { data: { turbo: false } } %>
+        <%= button_to "Delete my data", destroy_data_account_path, method: :delete, class: "account-menu-btn account-menu-btn-danger", form: { data: { confirm: "Isso removerá sua conta e dados definitivamente. Continuar?", turbo: false } } %>
       </div>
     </details>
   </div>

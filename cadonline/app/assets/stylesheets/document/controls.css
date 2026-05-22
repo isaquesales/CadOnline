@@ -1,33 +1,23 @@
-.document-controls {
-  position: absolute;
-  top: 8px;
-  left: var(--sheet-padding-left);
-  z-index: 6;
-}
+.document-controls { position: relative }
 
 .document-menu {
-  width: fit-content;
-  margin-top: 8px;
+  width: 300px;
   padding: 10px;
   border: 1px solid var(--divide);
   background: var(--paper);
 }
 
-.control-note {
-  margin: 0 0 8px;
-  font-size: 11px;
-  color: var(--muted);
-}
-
 .control-label {
   display: block;
-  margin-bottom: 6px;
+  margin: 8px 0 6px;
   font-size: 12px;
   color: var(--subtext);
 }
 
 .control-select,
+.control-input,
 .control-btn {
+  width: 100%;
   padding: 6px 10px;
   border: 1px solid var(--divide);
   background: transparent;
@@ -36,11 +26,8 @@
   font-family: var(--font-ui);
 }
 
-.control-select { min-width: 180px }
-
 .control-actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 8px;
   margin-top: 10px;
 }
@@ -48,13 +35,36 @@
 .control-btn { cursor: pointer }
 .control-btn:hover { background: var(--hover) }
 .control-btn:focus-visible,
-.control-select:focus-visible {
+.control-select:focus-visible,
+.control-input:focus-visible {
   outline: 1px solid var(--accent);
   outline-offset: 1px;
 }
 
-@media (max-width: 720px) {
-  .document-controls {
-    left: 12px;
-  }
+.tone-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
+
+.tone-chip {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid var(--divide);
+  cursor: pointer;
+}
+
+.tone-chip.active {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.tone-chip-none { background: transparent }
+.tone-chip-default { background: var(--paper) }
+.tone-chip-ivory { background: #f5efe4 }
+.tone-chip-warm { background: #efe3d4 }
+.tone-chip-gray { background: #ece9e4 }
+.tone-chip-rose { background: #f5e9ee }
+.tone-chip-sky { background: #eaf1f9 }
+.tone-chip-mint { background: #e8f2ec }

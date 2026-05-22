@@ -1,6 +1,6 @@
 class Document < ApplicationRecord
   PAPER_STYLES = %w[ruled blank grid kitalua].freeze
-  PAPER_TONES = %w[default ivory warm gray].freeze
+  PAPER_TONES = %w[none default ivory warm gray rose sky mint].freeze
 
   belongs_to :user
   has_many :favorites, dependent: :destroy

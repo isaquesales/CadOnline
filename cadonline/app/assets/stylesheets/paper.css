@@ -21,6 +21,15 @@
   width: var(--sheet-width);
 }
 
+.document-canvas.paper-tone-none { --paper-local: #ffffff }
+.document-canvas.paper-tone-default { --paper-local: var(--paper) }
+.document-canvas.paper-tone-ivory { --paper-local: #f5efe4 }
+.document-canvas.paper-tone-warm { --paper-local: #efe3d4 }
+.document-canvas.paper-tone-gray { --paper-local: #ece9e4 }
+.document-canvas.paper-tone-rose { --paper-local: #f5e9ee }
+.document-canvas.paper-tone-sky { --paper-local: #eaf1f9 }
+.document-canvas.paper-tone-mint { --paper-local: #e8f2ec }
+
 .document-sheets {
   display: flex;
   flex-direction: column;
@@ -30,7 +39,7 @@
 .paper-sheet {
   position: relative;
   min-height: var(--sheet-height);
-  background: var(--paper);
+  background: var(--paper-local, var(--paper));
   border: 1px solid var(--divide);
 }
 
@@ -71,39 +80,42 @@
   margin-bottom: 12px;
   padding: 8px 10px;
   border: 1px solid var(--divide);
-  background: var(--paper);
+  background: var(--paper-local, var(--paper));
   color: var(--subtext);
   font-size: 13px;
   line-height: 1.35;
 }
 
-.document-start-hint strong {
-  color: var(--text);
-  font-weight: 600;
-}
-
 @media print {
+  @page { size: A4; margin: 0 }
+
+  html, body {
+    background: var(--bg) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
   .topbar,
   .sidebar,
-  .document-controls { display: none !important }
+  .confirm-modal { display: none !important }
 
   body,
   .main,
   .main-inner {
-    overflow: visible;
-    position: static;
-    background: #fff;
-    padding: 0;
-    margin: 0;
+    overflow: visible !important;
+    position: static !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   .document-canvas,
   .document-sheets,
   .paper-sheet,
-  .document-editor-shell { width: 100% }
+  .document-editor-shell { width: 100% !important }
 
   .paper-sheet {
     border: 0;
     break-after: page;
+    page-break-after: always;
   }
 }

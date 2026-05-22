@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_21_211300) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_21_214000) do
   create_table "documents", force: :cascade do |t|
     t.boolean "archived", default: false, null: false
     t.json "content", default: {}, null: false
     t.datetime "created_at", null: false
     t.string "paper_style", default: "ruled", null: false
+    t.string "paper_tone", default: "default", null: false
     t.string "title", default: "Documento sem titulo", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false

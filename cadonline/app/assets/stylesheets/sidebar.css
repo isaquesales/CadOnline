@@ -21,6 +21,13 @@
   color: var(--muted);
 }
 
+.doc-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 4px;
+}
+
 .nav-item {
   display: block;
   width: 100%;
@@ -35,10 +42,22 @@
   font-weight: 500;
   font-family: var(--font-ui);
   transition: background .1s, color .1s;
+  text-decoration: none;
 }
 
 .nav-item:hover { background: var(--hover); color: var(--text) }
 .nav-item.active { background: var(--active); color: var(--text); font-weight: 600 }
+
+.doc-delete-btn {
+  border: 1px solid var(--divide);
+  background: transparent;
+  color: var(--muted);
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.doc-delete-btn:hover { background: var(--hover) }
 
 @media (max-width: 720px) {
   .nav-item { text-align: center; padding: 10px 6px }

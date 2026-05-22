@@ -27,6 +27,15 @@
         <%= yield %>
       </div>
     </main>
+    <div class="confirm-modal" id="confirmModal" hidden>
+      <div class="confirm-card">
+        <p id="confirmModalText">Tem certeza?</p>
+        <div class="confirm-actions">
+          <button class="theme-btn" id="confirmModalCancel" type="button">Cancelar</button>
+          <button class="theme-btn" id="confirmModalOk" type="button">Confirmar</button>
+        </div>
+      </div>
+    </div>
 
     <%= yield :scripts %>
   </body>

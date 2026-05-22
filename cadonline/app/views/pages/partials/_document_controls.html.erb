@@ -1,10 +1,8 @@
 <div class="document-controls" id="documentControls">
-  <button class="control-btn" id="documentMenuBtn" type="button" aria-expanded="false" aria-controls="documentMenu">
-    Configurar documento
-  </button>
+  <div class="document-menu" id="documentMenu">
+    <label class="control-label" for="documentTitleInput">Nome do documento</label>
+    <input class="control-input" id="documentTitleInput" type="text" maxlength="160" value="<%= document.title %>">
 
-  <div class="document-menu" id="documentMenu" hidden>
-    <p class="control-note">Configuração do documento</p>
     <label class="control-label" for="paperStyleSelect">Tipo de papel</label>
     <select class="control-select" id="paperStyleSelect" aria-label="Selecionar tipo de papel">
       <option value="ruled" <%= "selected" if document.paper_style == "ruled" %>>Ruled paper</option>
@@ -13,13 +11,21 @@
       <option value="kitalua" <%= "selected" if document.paper_style == "kitalua" %>>Kita/Lua</option>
     </select>
 
+    <div class="control-label">Cor da folha</div>
+    <div class="tone-palette" id="paperTonePalette" role="radiogroup" aria-label="Cor da folha">
+      <% tones = [["none", "Sem cor"], ["default", "Padrão"], ["ivory", "Marfim"], ["warm", "Quente"], ["gray", "Cinza"], ["rose", "Rosa claro"], ["sky", "Azul claro"], ["mint", "Verde claro"]] %>
+      <% tones.each do |value, label| %>
+        <button type="button" class="tone-chip tone-chip-<%= value %> <%= 'active' if document.paper_tone == value %>" data-tone-value="<%= value %>" aria-label="<%= label %>" title="<%= label %>"></button>
+      <% end %>
+    </div>
+
+    <input type="hidden" id="paperToneSelect" value="<%= document.paper_tone %>">
+
     <div class="control-actions">
-      <button class="control-btn" id="printDocumentBtn" type="button">Imprimir</button>
       <button class="control-btn" id="favoriteDocumentBtn" type="button">Favoritar</button>
       <button class="control-btn" id="exportCadBtn" type="button">Exportar .cad</button>
       <button class="control-btn" id="importCadBtn" type="button">Importar .cad</button>
       <input id="cadImportInput" type="file" accept=".cad,application/json" hidden>
     </div>
-    <p class="control-note">Dica: pressione Esc para fechar este menu.</p>
   </div>
 </div>

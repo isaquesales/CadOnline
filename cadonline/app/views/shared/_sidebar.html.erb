@@ -6,15 +6,20 @@
 
   <div class="nav-group">
     <div class="nav-label">Favoritos</div>
-    <% @sidebar_favorites.each do |doc| %>
+    <% Array(@sidebar_favorites).each do |doc| %>
       <%= link_to doc.title, root_path(document_id: doc.id), class: "nav-item" %>
     <% end %>
   </div>
 
   <div class="nav-group">
     <div class="nav-label">Documentos</div>
-    <% @sidebar_documents.each do |doc| %>
-      <%= link_to doc.title, root_path(document_id: doc.id), class: "nav-item #{'active' if @document&.id == doc.id}" %>
+    <% Array(@sidebar_documents).each do |doc| %>
+      <div class="doc-row">
+        <a href="<%= root_path(document_id: doc.id) %>" class="nav-item <%= 'active' if @document&.id == doc.id %>">
+          <span class="doc-title" contenteditable="true" data-doc-id="<%= doc.id %>"><%= doc.title %></span>
+        </a>
+        <%= button_to "×", document_path(doc), method: :delete, class: "doc-delete-btn", form: { data: { confirm: "Excluir este documento?" } } %>
+      </div>
     <% end %>
   </div>
 </aside>

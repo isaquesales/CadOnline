@@ -8,10 +8,11 @@ Rails.application.routes.draw do
   get "/signup", to: "registrations#new"
   post "/signup", to: "registrations#create"
 
+  get "/sobre", to: "static#about"
   get "/about", to: "static#about"
   get "/terms", to: "static#terms"
 
-  resource :account, only: [ :show ] do
+  resource :account, only: [ :show ], controller: "account" do
     delete :destroy_data
   end
 
@@ -20,4 +21,8 @@ Rails.application.routes.draw do
       patch :toggle_favorite
     end
   end
+
+  match "/404", to: "errors#not_found", via: :all
+  match "/422", to: "errors#unacceptable", via: :all
+  match "/500", to: "errors#internal_error", via: :all
 end

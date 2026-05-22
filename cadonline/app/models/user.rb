@@ -10,6 +10,11 @@ class User < ApplicationRecord
             format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :full_name, presence: true, length: { maximum: 120 }
   validates :accepted_terms, inclusion: { in: [ true ] }
+  validates :password, length: { minimum: 10 },
+            format: {
+              with: /(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*/,
+              message: "deve conter letra minúscula, maiúscula e número"
+            }, if: :password_present?
 
   before_validation :normalize_email
 
@@ -17,5 +22,9 @@ class User < ApplicationRecord
 
   def normalize_email
     self.email = email.to_s.strip.downcase
+  end
+
+  def password_present?
+    password.present?
   end
 end

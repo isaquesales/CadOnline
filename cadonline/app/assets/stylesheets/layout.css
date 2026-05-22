@@ -36,11 +36,22 @@ body { overflow: hidden }
 }
 
 .auth-shell {
-  max-width: 520px;
+  max-width: 720px;
   margin: 40px auto;
   padding: 18px;
   border: 1px solid var(--divide);
-  background: var(--paper);
+  background: var(--surface);
+}
+
+.content-page h3 {
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.content-page ul {
+  margin: 0;
+  padding-left: 18px;
 }
 
 .auth-form {
@@ -66,11 +77,34 @@ body { overflow: hidden }
   padding: 8px 10px;
   margin: 10px 0;
   border: 1px solid var(--divide);
-  background: var(--paper);
+  background: var(--surface);
   color: var(--text);
   font-size: 13px;
 }
 
-.flash-msg-alert {
-  color: #8f2e2e;
+.flash-msg-alert { color: #8f2e2e }
+
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.32);
+  display: grid;
+  place-items: center;
+  z-index: 2000;
+}
+
+.confirm-modal[hidden] { display: none !important }
+
+.confirm-card {
+  width: min(420px, 90vw);
+  padding: 16px;
+  border: 1px solid var(--divide);
+  background: var(--surface);
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
 }
