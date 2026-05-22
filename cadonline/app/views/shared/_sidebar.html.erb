@@ -18,7 +18,7 @@
         <a href="<%= root_path(document_id: doc.id) %>" class="nav-item <%= 'active' if @document&.id == doc.id %>">
           <span class="doc-title" contenteditable="true" data-doc-id="<%= doc.id %>"><%= doc.title %></span>
         </a>
-        <%= button_to "×", document_path(doc), method: :delete, class: "doc-delete-btn", form: { data: { confirm: "Excluir este documento?" } } %>
+        <%= button_to "×", document_path(doc), method: :delete, class: "doc-delete-btn" %>
       </div>
     <% end %>
   </div>
