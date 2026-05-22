@@ -84,10 +84,77 @@ function initTopbarPrint() {
   printBtn.addEventListener("click", () => window.print());
 }
 
+function initMobileSidebar() {
+  const root = document.documentElement;
+  const sidebar = document.querySelector(".sidebar");
+  const handle = document.getElementById("sidebarSwipeHandle");
+  const backdrop = document.getElementById("sidebarBackdrop");
+  if (!sidebar || !handle || !backdrop) return;
+
+  if (window.__mobileSidebarBound) return;
+  window.__mobileSidebarBound = true;
+
+  const media = window.matchMedia("(max-width: 720px)");
+  const isOpen = () => root.getAttribute("data-sidebar-open") === "true";
+  const setOpen = (open) => {
+    if (!media.matches) {
+      root.removeAttribute("data-sidebar-open");
+      return;
+    }
+    root.setAttribute("data-sidebar-open", open ? "true" : "false");
+  };
+
+  handle.addEventListener("click", () => setOpen(!isOpen()));
+  backdrop.addEventListener("click", () => setOpen(false));
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setOpen(false);
+  });
+
+  let startX = 0;
+  let tracking = false;
+  let mode = null;
+
+  document.addEventListener("touchstart", (event) => {
+    if (!media.matches || !event.touches[0]) return;
+    const x = event.touches[0].clientX;
+    const open = isOpen();
+
+    if (!open && x <= 26) {
+      tracking = true;
+      mode = "open";
+      startX = x;
+      return;
+    }
+
+    if (open) {
+      tracking = true;
+      mode = "close";
+      startX = x;
+    }
+  }, { passive: true });
+
+  document.addEventListener("touchend", (event) => {
+    if (!tracking || !media.matches || !event.changedTouches[0]) return;
+    const deltaX = event.changedTouches[0].clientX - startX;
+
+    if (mode === "open" && deltaX > 56) setOpen(true);
+    if (mode === "close" && deltaX < -56) setOpen(false);
+
+    tracking = false;
+    mode = null;
+  }, { passive: true });
+
+  media.addEventListener("change", () => {
+    if (!media.matches) root.removeAttribute("data-sidebar-open");
+  });
+}
+
 document.addEventListener("turbo:load", () => {
   initThemeToggle();
   initDocumentEditor();
   initPrettyConfirm();
   initSidebarRename();
   initTopbarPrint();
+  initMobileSidebar();
 });

@@ -18,6 +18,8 @@
     <% if logged_in? %>
       <%= render "shared/topbar" %>
       <%= render "shared/sidebar" %>
+      <button class="sidebar-swipe-handle" id="sidebarSwipeHandle" type="button" aria-label="Abrir menu">☰</button>
+      <button class="sidebar-backdrop" id="sidebarBackdrop" type="button" aria-label="Fechar menu"></button>
     <% end %>
 
     <main class="<%= logged_in? ? 'main' : '' %>">

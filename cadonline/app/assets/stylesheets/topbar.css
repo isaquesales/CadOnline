@@ -11,7 +11,8 @@
   padding: 0 18px;
   background: var(--topbar);
   border-bottom: 1px solid var(--divide);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
 }
 
 .topbar-left { min-width: 0 }
@@ -36,18 +37,19 @@
 .theme-btn {
   padding: 6px 12px;
   border: 1px solid var(--divide);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--subtext);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   font-family: var(--font-ui);
-  transition: background .12s, color .12s, border-color .12s;
+  transition: background .16s, color .16s, border-color .16s, transform .16s;
   text-decoration: none;
 }
 
 .theme-btn:hover { background: var(--hover); color: var(--text); border-color: var(--accent) }
+.theme-btn:active { transform: translateY(1px) }
 
 .account-menu,
 .document-menu-top { position: relative }
@@ -65,6 +67,8 @@
   border: 1px solid var(--divide);
   background: var(--surface);
   z-index: 20;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .account-menu-name { margin: 0; font-size: 13px; color: var(--text) }
@@ -75,10 +79,15 @@
   margin-top: 8px;
   padding: 6px 10px;
   border: 1px solid var(--divide);
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--text);
   font-size: 12px;
   cursor: pointer;
+}
+
+.account-menu-btn:hover {
+  background: var(--hover);
 }
 
 .account-menu-btn-danger { color: #8f2e2e }

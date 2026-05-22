@@ -8,6 +8,12 @@
   padding: 16px 10px;
   background: var(--sidebar);
   border-right: 1px solid var(--divide);
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.sidebar-swipe-handle,
+.sidebar-backdrop {
+  display: none;
 }
 
 .nav-group { margin-top: 6px }
@@ -25,7 +31,7 @@
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .nav-item {
@@ -33,7 +39,7 @@
   width: 100%;
   padding: 8px 10px;
   border: 0;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--subtext);
   text-align: left;
@@ -41,15 +47,17 @@
   font-size: 13px;
   font-weight: 500;
   font-family: var(--font-ui);
-  transition: background .1s, color .1s;
+  transition: background .16s, color .16s, transform .16s;
   text-decoration: none;
 }
 
 .nav-item:hover { background: var(--hover); color: var(--text) }
+.nav-item:active { transform: translateY(1px) }
 .nav-item.active { background: var(--active); color: var(--text); font-weight: 600 }
 
 .doc-delete-btn {
   border: 1px solid var(--divide);
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted);
   width: 24px;
@@ -60,5 +68,55 @@
 .doc-delete-btn:hover { background: var(--hover) }
 
 @media (max-width: 720px) {
-  .nav-item { text-align: center; padding: 10px 6px }
+  .sidebar {
+    top: var(--topbar-height);
+    width: min(84vw, 280px);
+    transform: translateX(calc(-100% + 14px));
+    z-index: 1300;
+    box-shadow: none;
+  }
+
+  html[data-sidebar-open="true"] .sidebar {
+    transform: translateX(0);
+    box-shadow: 8px 0 24px rgba(0, 0, 0, 0.22);
+  }
+
+  .sidebar-swipe-handle {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    left: 8px;
+    top: calc(var(--topbar-height) + 14px);
+    width: 24px;
+    height: 54px;
+    border: 1px solid var(--divide);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--subtext);
+    z-index: 1250;
+    cursor: pointer;
+  }
+
+  html[data-sidebar-open="true"] .sidebar-swipe-handle {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    inset: var(--topbar-height) 0 0 0;
+    border: 0;
+    background: rgba(0, 0, 0, 0.26);
+    z-index: 1200;
+    cursor: pointer;
+  }
+
+  html[data-sidebar-open="true"] .sidebar-backdrop {
+    display: block;
+  }
+
+  .nav-item {
+    text-align: left;
+    padding: 10px 10px;
+  }
 }

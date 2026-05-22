@@ -1,6 +1,9 @@
 .document-workspace {
   display: flex;
   justify-content: center;
+  width: max-content;
+  min-width: var(--sheet-width);
+  margin: 0 auto;
 }
 
 .document-canvas {
@@ -19,6 +22,9 @@
 
   position: relative;
   width: var(--sheet-width);
+  min-width: var(--sheet-width);
+  flex: 0 0 auto;
+  filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.08));
 }
 
 .document-canvas.paper-tone-none { --paper-local: #ffffff }
@@ -41,6 +47,7 @@
   min-height: var(--sheet-height);
   background: var(--paper-local, var(--paper));
   border: 1px solid var(--divide);
+  overflow: hidden;
 }
 
 .paper-sheet::before {
@@ -84,6 +91,7 @@
   color: var(--subtext);
   font-size: 13px;
   line-height: 1.35;
+  border-radius: var(--radius-sm);
 }
 
 @media print {
@@ -115,6 +123,7 @@
 
   .paper-sheet {
     border: 0;
+    border-radius: 0;
     break-after: page;
     page-break-after: always;
   }

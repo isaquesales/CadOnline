@@ -31,16 +31,18 @@ body { overflow: hidden }
 }
 
 @media (max-width: 720px) {
-  :root { --topbar-height: 48px; --sidebar-width: 68px }
+  :root { --topbar-height: 48px; --sidebar-width: 0px }
   .main-inner { padding: 14px 10px 20px }
 }
 
 .auth-shell {
   max-width: 720px;
   margin: 40px auto;
-  padding: 18px;
+  padding: 20px;
   border: 1px solid var(--divide);
   background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .content-page h3 {
@@ -63,7 +65,14 @@ body { overflow: hidden }
   border: 1px solid var(--divide);
   background: transparent;
   color: var(--text);
-  padding: 8px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.auth-form input:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
 }
 
 .terms-check {
@@ -74,12 +83,13 @@ body { overflow: hidden }
 }
 
 .flash-msg {
-  padding: 8px 10px;
+  padding: 10px 12px;
   margin: 10px 0;
   border: 1px solid var(--divide);
   background: var(--surface);
   color: var(--text);
   font-size: 13px;
+  border-radius: var(--radius-md);
 }
 
 .flash-msg-alert { color: #8f2e2e }
@@ -97,9 +107,11 @@ body { overflow: hidden }
 
 .confirm-card {
   width: min(420px, 90vw);
-  padding: 16px;
+  padding: 18px;
   border: 1px solid var(--divide);
   background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .confirm-actions {
